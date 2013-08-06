@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:security="http://www.springframework.org/schema/security"
+       xsi:schemaLocation="
+           http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+           http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.1.xsd">
+
+	<!-- Configure Spring Security -->
+	<security:http auto-config="true" use-expressions="true">
+		<security:form-login login-page="/spring/login" login-processing-url="/spring/loginProcess" 
+			default-target-url="/spring/main" authentication-failure-url="/spring/login?login_error=1" />
+		<security:logout logout-url="/spring/logout" logout-success-url="/spring/logoutSuccess" />
+		<security:intercept-url pattern="/secure" method="POST" access="hasRole('ROLE_SUPERVISOR')"/>
+	</security:http>
+    
+	<!--
+		Define local authentication provider, a real app would use an external provider (JDBC, LDAP, CAS, etc)
+		
+		usernames/passwords are:
+			keith/melbourne
+			erwin/leuven
+			jeremy/atlanta
+			scott/rochester
+	-->
+	<security:authentication-manager>
+		<security:authentication-provider>
+			<security:password-encoder hash="sha" />
+			<security:user-service>
+				<security:user name="keith" password="7c32a23ff05e6b6a61912aeb08135eacf7e04f2b" authorities="ROLE_USER, ROLE_SUPERVISOR" />
+				<security:user name="erwin" password="64bec1f460d26c6fa2f3e5100834bd0669a15228" authorities="ROLE_USER, ROLE_SUPERVISOR" />
+				<security:user name="jeremy" password="085277134da9ca888ee60a18e1f8260dba207b82" authorities="ROLE_USER" />
+				<security:user name="scott" password="2ad0c93dcf651c0afe5e5aa7a8778f7c3ec5769e" authorities="ROLE_USER" />
+			</security:user-service>
+		</security:authentication-provider>
+	</security:authentication-manager>	
+
+</beans>
